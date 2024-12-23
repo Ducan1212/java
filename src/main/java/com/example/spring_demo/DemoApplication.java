@@ -28,21 +28,7 @@ public class DemoApplication implements ApplicationRunner {
   
 	public static void main(String[] args) {  
 		ApplicationContext context = SpringApplication.run(DemoApplication.class, args);  
-	}  
-  
-	@GetMapping("/")  
-	String home() {  
-		return "Welcome to Tutorialspoint! " + appName + " is running.";  
-	}  
-  
-	@RequestMapping("/hello/{id}")  
-	public String hello(@PathVariable("id") String id) {  
-		if (id.equals("1")) {  
-			return "Hello World!";  
-		} else {  
-			throw new ProductNotFoundException("Product not found with ID: " + id);  
-		}  
-	}  
+	} 
   
 	@Override  
 	public void run(ApplicationArguments arg0) throws Exception {  

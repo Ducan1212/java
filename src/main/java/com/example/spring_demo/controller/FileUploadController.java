@@ -4,23 +4,34 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.spring_demo.service.FileService;
+
 @Controller
 public class FileUploadController {
 
+    @Autowired
+    FileService fileService;
     private final String URL = "/home/oem/Project/spring-demo/src/upload/";
 
     @GetMapping(value = "/upload")
-    public String listFileUpload() {
+    public String listFileUpload(Model model) {
+        List<com.example.spring_demo.model.File> files = fileService.getListFile();
+        model.addAttribute("files", files);
+
         return "file/list";
     }
 

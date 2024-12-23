@@ -39,4 +39,9 @@ public class LoginController {
 
         return "redirect:/login";
     }
+
+    @GetMapping(value = "/")
+    public String index() {
+        return "redirect:/message";
+    }
 }
