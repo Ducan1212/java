@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>  
+    <link th:href="@{../static/css/chat.css}" rel="stylesheet"/> 
+</head>
+<body>
+    <div class="container">
+        <div class="card text-center">
+          <div th:insert="fragments/navbar :: navbar"></div>
+            <div class="card-body">
+                <input type="hidden" id="userId" th:value="${user.id}">
+                <input type="hidden" id="userName" th:value="${user.username}">
+                <h1 class="text-center" th:text="'Chat with: ' + ${user.username}"></h1>
+                <div id="chat-container">
+                    <div id="chat-box"></div>
+                    <input type="text" id="user-input" placeholder="Type your message here..." />
+                    <button id="send-btn">Send</button>
+                </div>
+            </div>
+          </div>
+    </div>
+    <script>  
+        const userId = document.getElementById('userId').value;  
+        const userName = document.getElementById('userName').value;  
+        const socket = new SockJS('http://localhost:9090/ws/message');  
+        const stompClient = Stomp.over(socket);  
+  
+        stompClient.connect({}, function (frame) {  
+            console.log('Connected: ' + frame);  
+            stompClient.subscribe('/topic/messages', function (messageOutput) {  
+                const message = JSON.parse(messageOutput.body);  
+                const messageDiv = document.createElement('div');
+                if (message.userId === userId) { 
+                    messageDiv.className = 'bot-message';  
+                    // messageDiv.innerHTML = `${message.content}: ${message.userName}`;  
+                } else {
+                    messageDiv.className = 'user-message'; 
+                    // messageDiv.innerHTML = `${message.userName}: ${message.content}`;  
+                }
+                 messageDiv.innerHTML = `${message.content}`;
+                document.getElementById('chat-box').appendChild(messageDiv);  
+            });  
+        });  
+  
+        document.getElementById('send-btn').addEventListener('click', function() {  
+            const userInput = document.getElementById('user-input');  
+            const message = {  
+                userId: userId,
+                userName: userName,
+                content: userInput.value  
+            };  
+            stompClient.send(`/send/${userId}`, {}, JSON.stringify(message));  
+            userInput.value = '';  
+        });  
+    </script>  
+</body>
+</html>

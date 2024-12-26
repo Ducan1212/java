@@ -16,4 +16,11 @@ public class FileService {
     public List<File> getListFile() {
         return fileRepository.getListFile();
     }
+
+    public void insertFile(String name, String path) {
+        com.example.spring_demo.model.File file = new File();
+        file.setName(name);
+        file.setPath(path);
+        fileRepository.save(file);
+    }
 }

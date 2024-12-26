@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.beans.factory.annotation.Value;  
 import com.example.spring_demo.service.FileService;
 
 @Controller
@@ -25,7 +25,9 @@ public class FileUploadController {
 
     @Autowired
     FileService fileService;
-    private final String URL = "/home/oem/Project/spring-demo/src/upload/";
+
+    @Value("${upload.path}")  
+    private String URL;
 
     @GetMapping(value = "/upload")
     public String listFileUpload(Model model) {
@@ -37,14 +39,21 @@ public class FileUploadController {
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public String fileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        File convertFile = new File(URL + file.getOriginalFilename());
-        convertFile.createNewFile();
+        try {
+            String name = file.getOriginalFilename();
+            File convertFile = new File(URL + name);
+            convertFile.createNewFile();
+    
+            FileOutputStream fout = new FileOutputStream(convertFile);
+            fout.write(file.getBytes());
+            fout.close();
+    
+            fileService.insertFile(name, URL + name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        FileOutputStream fout = new FileOutputStream(convertFile);
-        fout.write(file.getBytes());
-        fout.close();
-
-        return "File is uploaded successfully";
+        return "redirect:/upload";
     }
 
     @GetMapping("/download")

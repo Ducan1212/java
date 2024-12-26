@@ -23,15 +23,15 @@ public class UserAuthenticationService implements AuthenticationProvider {
         System.out.println("username: " + username + ", password: " + password);
         User user = userSerivce.findByUsernameAndPassword(username, password);
         if (user != null) {
-            return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
+            return new UsernamePasswordAuthenticationToken(user, password, new ArrayList<>());  
         } else {
             return null;
         }
     }
 
     @Override
-   public boolean supports(Class<?> tokenType)
-   {
-      return tokenType.equals(UsernamePasswordAuthenticationToken.class);
-   }
+    public boolean supports(Class<?> tokenType)
+    {
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(tokenType);
+    }
 }

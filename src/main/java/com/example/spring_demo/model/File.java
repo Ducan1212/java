@@ -16,4 +16,24 @@ public class File implements Serializable {
     private Long id;  
     private String name;
     private String path;
+
+    public void setName(String name) {
+        this.name = name;  
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }   
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

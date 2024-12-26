@@ -41,11 +41,11 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @Bean  
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {  
-        AuthenticationManagerBuilder authenticationManagerBuilder =   
-            http.getSharedObject(AuthenticationManagerBuilder.class);  
-        authenticationManagerBuilder.authenticationProvider(authenticationProvider);  
-        return authenticationManagerBuilder.build();  
-    }  
+    @Bean    
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {    
+        AuthenticationManagerBuilder authenticationManagerBuilder =     
+            http.getSharedObject(AuthenticationManagerBuilder.class);    
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider);    
+        return authenticationManagerBuilder.build();    
+    }
 } 
